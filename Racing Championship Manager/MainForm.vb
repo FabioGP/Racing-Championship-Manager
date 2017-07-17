@@ -469,7 +469,6 @@ Public Class MainForm
   Private Sub FormatarDataGridViewParaEquipes()
     Try
       dtGridView.Columns.Clear()
-
       'Declaramos dois tipos de colunas, texto e imagens
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
@@ -532,7 +531,6 @@ Public Class MainForm
   Private Sub FormatarDataGridViewParaPilotos()
     Try
       dtGridView.Columns.Clear()
-
       'Declaramos dois tipos de colunas, texto e imagens
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
@@ -665,7 +663,6 @@ Public Class MainForm
   Private Sub FormatarDataGridViewParaEtapas()
     Try
       dtGridView.Columns.Clear()
-
       'Declaramos dois tipos de colunas, texto e imagens
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
@@ -786,7 +783,6 @@ Public Class MainForm
   Private Sub FormatarDataGridViewParaEtapaResultados()
     Try
       dtGridView.Columns.Clear()
-
       'Declaramos dois tipos de colunas, texto e imagens
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
@@ -794,7 +790,8 @@ Public Class MainForm
 
       '1 - Posição
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 40
       newTextColumn.Name = "colPosicaoEtapa"
       newTextColumn.DataPropertyName = "PosicaoEtapa"
       newTextColumn.HeaderText = "Pos"
@@ -805,7 +802,6 @@ Public Class MainForm
       '2 - Nome do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newTextColumn.Width = 200
       newTextColumn.Name = "colPilotoNome"
       newTextColumn.DataPropertyName = "GridPilotoNome"
       newTextColumn.HeaderText = "Piloto"
@@ -815,7 +811,8 @@ Public Class MainForm
 
       '3 - Número do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 40
       newTextColumn.Name = "colPilotoNumero"
       newTextColumn.DataPropertyName = "GridPilotoNumero"
       newTextColumn.HeaderText = "Nº"
@@ -838,7 +835,6 @@ Public Class MainForm
       '5 - Nome da Equipe
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newTextColumn.Width = 200
       newTextColumn.Name = "colEquipeNome"
       newTextColumn.DataPropertyName = "GridEquipeNome"
       newTextColumn.HeaderText = "Equipe"
@@ -871,10 +867,11 @@ Public Class MainForm
 
       '8 - Tomada
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 100
       newTextColumn.Name = "colTomada"
       newTextColumn.DataPropertyName = "TomadaCorrida"
-      newTextColumn.HeaderText = "Tomada"
+      newTextColumn.HeaderText = "Tomada" & vbNewLine & "(Corrida)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
       newTextColumn.ReadOnly = True
@@ -883,19 +880,22 @@ Public Class MainForm
       '9 - Punição na Corrida
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-      newTextColumn.Name = "colPunicao"
-      newTextColumn.DataPropertyName = "TextoPunicaoCorrida"
-      newTextColumn.HeaderText = "Punição [s]"
+      newTextColumn.Width = 100
+      newTextColumn.Name = "colPunicaoCorrida"
+      newTextColumn.DataPropertyName = "PunicaoCorrida"
+      newTextColumn.HeaderText = "Punição" & vbNewLine & "(Corrida)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
       '10 - Gap para Líder
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 100
       newTextColumn.Name = "colGapLider"
       newTextColumn.DataPropertyName = "GapLider"
-      newTextColumn.HeaderText = "GAP (Líder)"
+      newTextColumn.HeaderText = "GAP" & vbNewLine & "(Líder)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
       newTextColumn.ReadOnly = True
@@ -903,40 +903,65 @@ Public Class MainForm
 
       '11 - Gap para Frente
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newTextColumn.Name = "colGapLider"
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 100
+      newTextColumn.Name = "colGapFrente"
       newTextColumn.DataPropertyName = "GapFrente"
-      newTextColumn.HeaderText = "GAP (Frente)"
+      newTextColumn.HeaderText = "GAP" & vbNewLine & "(Frente)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '12 - Tempo Enviado
-      newChckColumn = New DataGridViewCheckBoxColumn()
-      newChckColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newChckColumn.Name = "colTempoEnviado"
-      newChckColumn.DataPropertyName = "CorridaEnviada"
-      newChckColumn.HeaderText = "Tempo Enviado" & vbNewLine & "Corrida"
-      newChckColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-      newChckColumn.ReadOnly = True
-      dtGridView.Columns.Add(newChckColumn)
-
-      '13 - Melhor Volta da Corrida
-      newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newTextColumn.Name = "colMelhorVoltaCorrida"
-      newTextColumn.DataPropertyName = "MelhorVoltaCorrida"
-      newTextColumn.HeaderText = "Melhor Volta" & vbNewLine & "Corrida"
-      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-      newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
-      newTextColumn.ReadOnly = True
-      dtGridView.Columns.Add(newTextColumn)
-
-      '14 - Pontos da Etapa
+      '12 - Melhor Volta da Corrida
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-      newTextColumn.Width = 90
+      newTextColumn.Width = 100
+      newTextColumn.Name = "colMelhorVoltaCorrida"
+      newTextColumn.DataPropertyName = "MelhorVoltaCorrida"
+      newTextColumn.HeaderText = "Melhor Volta" & vbNewLine & "(Corrida)"
+      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
+      newTextColumn.ReadOnly = True
+      dtGridView.Columns.Add(newTextColumn)
+
+      '13 - Pneus
+      newTextColumn = New DataGridViewTextBoxColumn()
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 50
+      newTextColumn.Name = "colPneus"
+      newTextColumn.DataPropertyName = "CorridaTyresConsumption"
+      newTextColumn.HeaderText = "Pneus"
+      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.ReadOnly = True
+      dtGridView.Columns.Add(newTextColumn)
+
+      '14 - Evolucao
+      newTextColumn = New DataGridViewTextBoxColumn()
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 50
+      newTextColumn.Name = "colEvolucao"
+      newTextColumn.DataPropertyName = "Evolucao"
+      newTextColumn.HeaderText = ""
+      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.ReadOnly = True
+      dtGridView.Columns.Add(newTextColumn)
+
+      '15 - Fator Grid
+      newTextColumn = New DataGridViewTextBoxColumn()
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 80
+      newTextColumn.Name = "colFatorGrid"
+      newTextColumn.DataPropertyName = "FatorGrid"
+      newTextColumn.HeaderText = "Efeito" & vbNewLine & "Grid"
+      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.ReadOnly = True
+      dtGridView.Columns.Add(newTextColumn)
+
+      '16 - Pontos da Etapa
+      newTextColumn = New DataGridViewTextBoxColumn()
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 80
       newTextColumn.Name = "colPontosPosicao"
       newTextColumn.DataPropertyName = "PontosPosicao"
       newTextColumn.HeaderText = "Pontos " & vbNewLine & "Posição"
@@ -944,10 +969,10 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '15 - Pontos Totais
+      '17 - Pontos Totais
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-      newTextColumn.Width = 90
+      newTextColumn.Width = 80
       newTextColumn.Name = "colPontosTotais"
       newTextColumn.DataPropertyName = "PontosTotais"
       newTextColumn.HeaderText = "Pontos " & vbNewLine & "Totais"
@@ -971,7 +996,6 @@ Public Class MainForm
   Private Sub FormatarDataGridViewParaEtapaGrid()
     Try
       dtGridView.Columns.Clear()
-
       'Declaramos dois tipos de colunas, texto e imagens
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
@@ -979,7 +1003,8 @@ Public Class MainForm
 
       '1 - Posição
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 40
       newTextColumn.Name = "colPosicao"
       newTextColumn.DataPropertyName = "PosicaoGrid"
       newTextColumn.HeaderText = "Pos"
@@ -990,7 +1015,6 @@ Public Class MainForm
       '2 - Nome do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newTextColumn.Width = 200
       newTextColumn.Name = "colPilotoNome"
       newTextColumn.DataPropertyName = "GridPilotoNome"
       newTextColumn.HeaderText = "Piloto"
@@ -1000,7 +1024,8 @@ Public Class MainForm
 
       '3 - Número do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 40
       newTextColumn.Name = "colPilotoNumero"
       newTextColumn.DataPropertyName = "GridPilotoNumero"
       newTextColumn.HeaderText = "Nº"
@@ -1023,7 +1048,6 @@ Public Class MainForm
       '5 - Nome da Equipe
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newTextColumn.Width = 200
       newTextColumn.Name = "colEquipeNome"
       newTextColumn.DataPropertyName = "GridEquipeNome"
       newTextColumn.HeaderText = "Equipe"
@@ -1056,10 +1080,11 @@ Public Class MainForm
 
       '8 - Melhor Volta da Classificação
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 100
       newTextColumn.Name = "colMelhorVoltaClassificacao"
       newTextColumn.DataPropertyName = "MelhorVoltaClassificacao"
-      newTextColumn.HeaderText = "Melhor Volta" & vbNewLine & "Classificação"
+      newTextColumn.HeaderText = "Melhor Volta" & vbNewLine & "(Classificação)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
       newTextColumn.ReadOnly = True
@@ -1067,10 +1092,11 @@ Public Class MainForm
 
       '9 - Tomada da Classificação
       newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 100
       newTextColumn.Name = "colTomada"
       newTextColumn.DataPropertyName = "TomadaClassificacao"
-      newTextColumn.HeaderText = "Tomada"
+      newTextColumn.HeaderText = "Tomada" & vbNewLine & "(Classificação)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
       newTextColumn.ReadOnly = True
@@ -1079,41 +1105,45 @@ Public Class MainForm
       '10 - Punição na Classificação
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-      newTextColumn.Name = "colPunicao"
-      newTextColumn.DataPropertyName = "TextoPunicaoClassificacao"
-      newTextColumn.HeaderText = "Punição" & vbNewLine & "Classificação"
-      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-      newTextColumn.ReadOnly = True
-      dtGridView.Columns.Add(newTextColumn)
-
-      '11 - Gap para Líder
-      newTextColumn = New DataGridViewTextBoxColumn()
-      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newTextColumn.Name = "colGapLider"
-      newTextColumn.DataPropertyName = "GapMelhorVolta"
-      newTextColumn.HeaderText = "GAP (Melhor Volta)"
+      newTextColumn.Width = 100
+      newTextColumn.Name = "colPunicaoClassificacao"
+      newTextColumn.DataPropertyName = "PunicaoClassificacao"
+      newTextColumn.HeaderText = "Punição" & vbNewLine & "(Classificação)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '12 - Tempo Enviado na Classificação
-      newChckColumn = New DataGridViewCheckBoxColumn()
-      newChckColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      newChckColumn.Name = "colTempoEnviado"
-      newChckColumn.DataPropertyName = "ClassificacaoEnviada"
-      newChckColumn.HeaderText = "Tempo Enviado" & vbNewLine & "Classificação"
-      newChckColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-      newChckColumn.ReadOnly = True
-      dtGridView.Columns.Add(newChckColumn)
+      '11 - Gap para Líder
+      newTextColumn = New DataGridViewTextBoxColumn()
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 100
+      newTextColumn.Name = "colGapLider"
+      newTextColumn.DataPropertyName = "GapMelhorVolta"
+      newTextColumn.HeaderText = "GAP" & vbNewLine & "(Líder)"
+      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.DefaultCellStyle.Format = "mm\:ss\,ff"
+      newTextColumn.ReadOnly = True
+      dtGridView.Columns.Add(newTextColumn)
+
+      '12 - Pneus
+      newTextColumn = New DataGridViewTextBoxColumn()
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newTextColumn.Width = 50
+      newTextColumn.Name = "colPneus"
+      newTextColumn.DataPropertyName = "ClassificacaoTyresConsumption"
+      newTextColumn.HeaderText = "Pneus"
+      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.ReadOnly = True
+      dtGridView.Columns.Add(newTextColumn)
 
       '13 - Pontos Deadline 1
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-      newTextColumn.Width = 90
+      newTextColumn.Width = 80
       newTextColumn.Name = "colPontosDeadline1"
       newTextColumn.DataPropertyName = "PontosDeadline1"
-      newTextColumn.HeaderText = "Pontos " & vbNewLine & "DLQ"
+      newTextColumn.HeaderText = "Pontos" & vbNewLine & "(Envio)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -1121,10 +1151,10 @@ Public Class MainForm
       '14 - Pontos GRID
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-      newTextColumn.Width = 90
+      newTextColumn.Width = 80
       newTextColumn.Name = "colPontosGrid"
       newTextColumn.DataPropertyName = "PontosGrid"
-      newTextColumn.HeaderText = "Pontos " & vbNewLine & "Grid"
+      newTextColumn.HeaderText = "Pontos" & vbNewLine & "(Grid)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -1132,10 +1162,10 @@ Public Class MainForm
       '15 - Pontos de Aproximação
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-      newTextColumn.Width = 90
+      newTextColumn.Width = 80
       newTextColumn.Name = "colPontosAproximacao"
       newTextColumn.DataPropertyName = "PontosAproximacao"
-      newTextColumn.HeaderText = "Pontos " & vbNewLine & "DP1"
+      newTextColumn.HeaderText = "Pontos" & vbNewLine & "(Aprox.)"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -1156,7 +1186,6 @@ Public Class MainForm
   Private Sub FormatarDataGridViewParaMundialPilotos()
     Try
       dtGridView.Columns.Clear()
-
       'Declaramos dois tipos de colunas, texto e imagens
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
@@ -1266,7 +1295,6 @@ Public Class MainForm
   Private Sub FormatarDataGridViewParaMundialConstrutores()
     Try
       dtGridView.Columns.Clear()
-
       'Declaramos dois tipos de colunas, texto e imagens
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
@@ -1439,6 +1467,51 @@ Public Class MainForm
       tmpResultadoEquipe.Posicao = pos
       pos += 1
     Next
+  End Sub
+
+  Private Sub dtGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dtGridView.CellFormatting
+    Select Case dtGridView.Columns(e.ColumnIndex).Name
+      Case "colTomada", "colMelhorVoltaCorrida", "colMelhorVoltaClassificacao"
+        If e.Value.ToString = New TimeSpan().ToString() Then
+          e.CellStyle.ForeColor = Color.White
+          e.Value = ""
+        End If
+      Case "colPunicaoClassificacao", "colPunicaoCorrida"
+        If e.Value.ToString = New TimeSpan().ToString() Then
+          e.CellStyle.ForeColor = Color.White
+          e.Value = ""
+        Else
+          e.CellStyle.ForeColor = Color.LightCoral
+          e.Value = "+ " & DirectCast(e.Value, TimeSpan).ToString("mm\:ss\,ff")
+        End If
+      Case "colGapLider", "colGapFrente"
+        If e.Value.ToString = New TimeSpan().ToString() Then
+          e.Value = ""
+        Else
+          e.Value = "+ " & DirectCast(e.Value, TimeSpan).ToString("mm\:ss\,ff")
+        End If
+      Case "colEvolucao"
+        If CInt(e.Value) = 0 Then
+          e.Value = "▬"
+          e.CellStyle.ForeColor = Color.LightBlue
+          Exit Sub
+        End If
+
+        If CInt(e.Value) < 0 Then
+          e.Value = "▼ " & e.Value.ToString
+          e.CellStyle.ForeColor = Color.LightCoral
+          Exit Sub
+        End If
+
+        If CInt(e.Value) > 0 Then
+          e.Value = "▲ " & e.Value.ToString
+          e.CellStyle.ForeColor = Color.LightGreen
+          Exit Sub
+        End If
+
+      Case "colPneus"
+        e.Value = e.Value.ToString & " %"
+    End Select
   End Sub
 
 End Class

@@ -28,8 +28,8 @@
   Private intPontosDeadLine1 As Integer = 0
   Private intPontosPosicao As Integer = 0
   Private intPontosTotais As Integer = 0
-  Private intPunicaoClassificacao As Integer = 0
-  Private intPunicaoCorrida As Integer = 0
+  Private timPunicaoClassificacao As TimeSpan = Nothing
+  Private timPunicaoCorrida As TimeSpan = Nothing
 
   'Configurações Classificação
   Private intClassificacaoLaps As Integer = 0
@@ -354,32 +354,32 @@
   End Property
 
   ''' <summary>
-  ''' Segundos de Punição na Classificacao
+  ''' Punição na Classificacao
   ''' </summary>
   ''' <value></value>
   ''' <returns></returns>
   ''' <remarks></remarks>
-  Public Property PunicaoClassificacao As Integer
+  Public Property PunicaoClassificacao As TimeSpan
     Get
-      Return intPunicaoClassificacao
+      Return timPunicaoClassificacao
     End Get
-    Set(value As Integer)
-      intPunicaoClassificacao = value
+    Set(value As TimeSpan)
+      timPunicaoClassificacao = value
     End Set
   End Property
 
   ''' <summary>
-  ''' Segundos de Punição na Corrida
+  ''' Punição na Corrida
   ''' </summary>
   ''' <value></value>
   ''' <returns></returns>
   ''' <remarks></remarks>
-  Public Property PunicaoCorrida As Integer
+  Public Property PunicaoCorrida As TimeSpan
     Get
-      Return intPunicaoCorrida
+      Return timPunicaoCorrida
     End Get
-    Set(value As Integer)
-      intPunicaoCorrida = value
+    Set(value As TimeSpan)
+      timPunicaoCorrida = value
     End Set
   End Property
 
@@ -624,36 +624,22 @@
   End Property
 
   ''' <summary>
-  ''' Texto que mostra a punição da classificacao
+  ''' Fator Grid
   ''' </summary>
-  ''' <value></value>
   ''' <returns></returns>
-  ''' <remarks></remarks>
-  Public ReadOnly Property TextoPunicaoClassificacao As String
+  Public ReadOnly Property FatorGrid As Integer
     Get
-      If PunicaoClassificacao = 0 Then
-        Return "---"
-      Else
-        Return "+" & PunicaoClassificacao & " [s]"
-      End If
-
+      Return (PontosAproximacao + PontosDeadLine1 + PontosGrid)
     End Get
   End Property
 
   ''' <summary>
-  ''' Texto que mostra a punição da corrida
+  ''' Posicao da corrida em relação a posição de largadas
   ''' </summary>
-  ''' <value></value>
   ''' <returns></returns>
-  ''' <remarks></remarks>
-  Public ReadOnly Property TextoPunicaoCorrida As String
+  Public ReadOnly Property Evolucao As Integer
     Get
-      If PunicaoCorrida = 0 Then
-        Return "---"
-      Else
-        Return "+" & PunicaoCorrida & " [s]"
-      End If
-
+      Return (PosicaoGrid - PosicaoEtapa)
     End Get
   End Property
 

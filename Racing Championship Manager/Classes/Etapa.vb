@@ -297,7 +297,6 @@ Public Class Etapa
         Dim dicParametrosClassificacao As New Dictionary(Of String, String)
         Dim newReader As New StreamReader(tmpResultadosTxtPath.FullName, System.Text.Encoding.Default)
         Dim curLine As Integer = 1
-        Dim DLQEncontrado As Boolean = False
         Dim PenaltyEncontrado As Boolean = False
 
         While Not newReader.EndOfStream
@@ -339,21 +338,12 @@ Public Class Etapa
             Next
           End If
 
-          'DLQ
-          If curSplitedLine(0).Contains("DLQ=") Then
-            DLQEncontrado = True
-            curSplitedLine = Split(curSplitedLine(0), "=")
-            If curSplitedLine.Count = 2 Then
-              dicParametrosClassificacao.Add("DLQ_EXTRAPOINTS", CBool(curSplitedLine(1)))
-            End If
-          End If
-
           'Penalty
-          If curSplitedLine(0).Contains("PenaltySeconds=") Then
+          If curSplitedLine(0).Contains("Penalty=") Then
             PenaltyEncontrado = True
             curSplitedLine = Split(curSplitedLine(0), "=")
             If curSplitedLine.Count = 2 Then
-              dicParametrosClassificacao.Add("DLQ_PENALTY", CInt(curSplitedLine(1)))
+              dicParametrosClassificacao.Add("DLQ_PENALTY", curSplitedLine(1))
             End If
           End If
 
@@ -383,17 +373,10 @@ Public Class Etapa
         newReader.Close()
         newReader = Nothing
 
-        If Not DLQEncontrado Then
-          Dim newWriter As New StreamWriter(tmpResultadosTxtPath.FullName, True, System.Text.Encoding.UTF8)
-          newWriter.WriteLine("")
-          newWriter.WriteLine("DLQ=False")
-          newWriter.Close()
-        End If
-
         If Not PenaltyEncontrado Then
           Dim newWriter As New StreamWriter(tmpResultadosTxtPath.FullName, True, System.Text.Encoding.UTF8)
           newWriter.WriteLine("")
-          newWriter.WriteLine("PenaltySeconds=0")
+          newWriter.WriteLine("Penalty=00:00,00")
           newWriter.Close()
         End If
 
@@ -408,20 +391,16 @@ Public Class Etapa
         Dim curPiloto As Piloto = _DicResultadosPilotos(dicParametrosClassificacao("DLQ_DRIVER"))
         For Each tmpResultado As ResultadoEtapa In tmpEtapa.Resultados
           If tmpResultado.Piloto IsNot Nothing AndAlso tmpResultado.Piloto.Nome = curPiloto.Nome Then
-            If dicParametrosClassificacao.ContainsKey("DLQ_EXTRAPOINTS") AndAlso CBool(dicParametrosClassificacao("DLQ_EXTRAPOINTS")) = True Then
-              If _DicPontos.ContainsKey("DLQ") Then
-                tmpResultado.PontosDeadLine1 = _DicPontos("DLQ")
-              Else
-                tmpResultado.PontosDeadLine1 = 0
-              End If
+            If _DicPontos.ContainsKey("DLQ") Then
+              tmpResultado.PontosDeadLine1 = _DicPontos("DLQ")
             Else
               tmpResultado.PontosDeadLine1 = 0
             End If
 
-            If dicParametrosClassificacao.ContainsKey("DLQ_PENALTY") AndAlso IsNumeric(dicParametrosClassificacao("DLQ_PENALTY")) Then
-              tmpResultado.PunicaoClassificacao = CInt(dicParametrosClassificacao("DLQ_PENALTY"))
+            If dicParametrosClassificacao.ContainsKey("DLQ_PENALTY") Then
+              tmpResultado.PunicaoClassificacao = FormataTempo(dicParametrosClassificacao("DLQ_PENALTY"), New TimeSpan())
             Else
-              tmpResultado.PunicaoClassificacao = 0
+              tmpResultado.PunicaoClassificacao = New TimeSpan()
             End If
 
             If dicParametrosClassificacao.ContainsKey("DLQ_FASTESTLAP") Then
@@ -502,11 +481,11 @@ Public Class Etapa
           End If
 
           'PENALTY
-          If curSplitedLine(0).Contains("PenaltySeconds=") Then
+          If curSplitedLine(0).Contains("Penalty=") Then
             PenaltyEncontrado = True
             curSplitedLine = Split(curSplitedLine(0), "=")
             If curSplitedLine.Count = 2 Then
-              dicParametrosCorrida.Add("RAC_PENALTY", CInt(curSplitedLine(1)))
+              dicParametrosCorrida.Add("RAC_PENALTY", curSplitedLine(1))
             End If
           End If
 
@@ -539,7 +518,7 @@ Public Class Etapa
         If Not PenaltyEncontrado Then
           Dim newWriter As New StreamWriter(tmpResultadosTxtPath.FullName, True, System.Text.Encoding.UTF8)
           newWriter.WriteLine("")
-          newWriter.WriteLine("PenaltySeconds=0")
+          newWriter.WriteLine("Penalty=00:00,00")
           newWriter.Close()
         End If
 
@@ -554,18 +533,18 @@ Public Class Etapa
         Dim curPiloto As Piloto = _DicResultadosPilotos(dicParametrosCorrida("RAC_DRIVER"))
         For Each tmpResultado As ResultadoEtapa In tmpEtapa.Resultados
           If tmpResultado.Piloto IsNot Nothing AndAlso tmpResultado.Piloto.Nome = curPiloto.Nome Then
-            If dicParametrosCorrida.ContainsKey("RAC_PENALTY") AndAlso IsNumeric(dicParametrosCorrida("RAC_PENALTY")) Then
-              tmpResultado.PunicaoCorrida = CInt(dicParametrosCorrida("RAC_PENALTY"))
+            If dicParametrosCorrida.ContainsKey("RAC_PENALTY") Then
+              tmpResultado.PunicaoCorrida = FormataTempo(dicParametrosCorrida("RAC_PENALTY"), New TimeSpan())
             Else
-              tmpResultado.PunicaoCorrida = 0
+              tmpResultado.PunicaoCorrida = New TimeSpan()
             End If
 
             If dicParametrosCorrida.ContainsKey("RAC_FASTESTLAP") Then
-              tmpResultado.MelhorVoltaCorrida = FormataTempo(dicParametrosCorrida("RAC_FASTESTLAP"), 0)
+              tmpResultado.MelhorVoltaCorrida = FormataTempo(dicParametrosCorrida("RAC_FASTESTLAP"), tmpResultado.PunicaoCorrida)
             End If
 
             If dicParametrosCorrida.ContainsKey("RAC_TOTALTIME") Then
-              tmpResultado.TomadaCorrida = FormataTempo(dicParametrosCorrida("RAC_TOTALTIME"), 0)
+              tmpResultado.TomadaCorrida = FormataTempo(dicParametrosCorrida("RAC_TOTALTIME"), tmpResultado.PunicaoCorrida)
             End If
 
             If dicParametrosCorrida.ContainsKey("RAC_LAPS") AndAlso IsNumeric(dicParametrosCorrida("RAC_LAPS")) Then
@@ -614,45 +593,36 @@ Public Class Etapa
 
         tmpResultadoEtapa.ClassificacaoEnviada = True
         tmpResultadoEtapa.PosicaoGrid = curPos
+        tmpResultadoEtapa.PontosDeadLine1 = 1
         curPos += 1
 
-        'Calcula os pontos de classificacao
-        Select Case tmpResultadoEtapa.PosicaoGrid
-          Case 1
-            If _DicPontos.ContainsKey("PG" & tmpResultadoEtapa.PosicaoGrid) Then
-              tmpResultadoEtapa.PontosGrid = _DicPontos("PG" & tmpResultadoEtapa.PosicaoGrid)
+        'Soma uma pole caso o resultado tenha sido a pole
+        If tmpResultadoEtapa.PosicaoGrid = 1 Then
+          tmpResultadoEtapa.Piloto.Poles += 1
+        Else
+          'Se o gap para a primeira posicao for menor que 1, soma os pontos de aproximacao
+          If tmpResultadoEtapa.GapMelhorVolta.TotalSeconds <= 1 Then
+            If _DicPontos.ContainsKey("PGA") Then
+              tmpResultadoEtapa.PontosAproximacao = _DicPontos("PGA")
             Else
-              tmpResultadoEtapa.PontosGrid = 0
+              tmpResultadoEtapa.PontosAproximacao = 0
             End If
-            tmpResultadoEtapa.Piloto.Poles += 1
-          Case 2, 3
-            If _DicPontos.ContainsKey("PG" & tmpResultadoEtapa.PosicaoGrid) Then
-              tmpResultadoEtapa.PontosGrid = _DicPontos("PG" & tmpResultadoEtapa.PosicaoGrid)
-            Else
-              tmpResultadoEtapa.PontosGrid = 0
-            End If
-          Case Else
-            If _DicPontos.ContainsKey("PG" & tmpResultadoEtapa.PosicaoGrid) Then
-              tmpResultadoEtapa.PontosGrid = _DicPontos("PG" & tmpResultadoEtapa.PosicaoGrid)
-            Else
-              tmpResultadoEtapa.PontosGrid = 0
-            End If
+          End If
+        End If
 
-            If tmpResultadoEtapa.GapMelhorVolta.TotalSeconds <= 1 Then
-              If _DicPontos.ContainsKey("PGA") Then
-                tmpResultadoEtapa.PontosAproximacao = _DicPontos("PGA")
-              Else
-                tmpResultadoEtapa.PontosAproximacao = 0
-              End If
-            End If
-        End Select
+        'Calcula os pontos de classificacao
+        If _DicPontos.ContainsKey("PG" & tmpResultadoEtapa.PosicaoGrid) Then
+          tmpResultadoEtapa.PontosGrid = _DicPontos("PG" & tmpResultadoEtapa.PosicaoGrid)
+        Else
+          tmpResultadoEtapa.PontosGrid = 0
+        End If
       Next
 
       'Agora devemos calcular o resultado final
       curPos = 1
       Dim curMelhorTomada As TimeSpan = Nothing
       Dim curTomadaFrente As TimeSpan = Nothing
-      For Each tmpResultadoEtapa As ResultadoEtapa In tmpEtapa.Resultados.OrderBy(Function(resultado) resultado.TomadaCorrida).ToList()
+      For Each tmpResultadoEtapa As ResultadoEtapa In tmpEtapa.Resultados.OrderBy(Function(resultado) resultado.TomadaCorrida).ThenBy(Function(resultado) resultado.MelhorVoltaCorrida).ToList()
         If tmpResultadoEtapa.TomadaCorrida.Hours = 0 AndAlso tmpResultadoEtapa.TomadaCorrida.Minutes = 0 AndAlso tmpResultadoEtapa.TomadaCorrida.Seconds = 0 Then
           tmpResultadoEtapa.PosicaoEtapa = tmpEtapa.Resultados.Count
           tmpResultadoEtapa.CorridaEnviada = False
@@ -675,21 +645,15 @@ Public Class Etapa
         curPos += 1
 
         'Calcula os pontos da etapa
-        Select Case tmpResultadoEtapa.PosicaoEtapa
-          Case 1
-            If _DicPontos.ContainsKey("P" & tmpResultadoEtapa.PosicaoEtapa) Then
-              tmpResultadoEtapa.PontosPosicao = _DicPontos("P" & tmpResultadoEtapa.PosicaoEtapa)
-            Else
-              tmpResultadoEtapa.PontosPosicao = 0
-            End If
-            tmpResultadoEtapa.Piloto.Vitorias += 1
-          Case Else
-            If _DicPontos.ContainsKey("P" & tmpResultadoEtapa.PosicaoEtapa) Then
-              tmpResultadoEtapa.PontosPosicao = _DicPontos("P" & tmpResultadoEtapa.PosicaoEtapa)
-            Else
-              tmpResultadoEtapa.PontosPosicao = 0
-            End If
-        End Select
+        If tmpResultadoEtapa.PosicaoEtapa = 1 Then
+          tmpResultadoEtapa.Piloto.Vitorias += 1
+        End If
+
+        If _DicPontos.ContainsKey("P" & tmpResultadoEtapa.PosicaoEtapa) Then
+          tmpResultadoEtapa.PontosPosicao = _DicPontos("P" & tmpResultadoEtapa.PosicaoEtapa)
+        Else
+          tmpResultadoEtapa.PontosPosicao = 0
+        End If
 
         'Calcula os pontos totais da etapa
         tmpResultadoEtapa.PontosTotais = tmpResultadoEtapa.PontosAproximacao + tmpResultadoEtapa.PontosDeadLine1 + tmpResultadoEtapa.PontosGrid + tmpResultadoEtapa.PontosPosicao
@@ -703,7 +667,7 @@ Public Class Etapa
   ''' <param name="_tempoArquivo"></param>
   ''' <returns></returns>
   ''' <remarks></remarks>
-  Public Shared Function FormataTempo(ByVal _tempoArquivo As String, ByVal _punicao As Integer) As TimeSpan
+  Public Shared Function FormataTempo(ByVal _tempoArquivo As String, ByVal _punicao As TimeSpan) As TimeSpan
     Dim novoTempo As TimeSpan
     _tempoArquivo = _tempoArquivo.Replace(",", "|")
     _tempoArquivo = _tempoArquivo.Replace(":", "|")
@@ -716,17 +680,17 @@ Public Class Etapa
 
     Dim strTempoSplited() As String = Split(_tempoArquivo, "|")
     If strTempoSplited.Count = 2 Then
-      intSeconds = CInt(strTempoSplited(0)) + _punicao
+      intSeconds = CInt(strTempoSplited(0))
       intMiliSeconds = CInt(strTempoSplited(1)) * 10
     End If
 
     If strTempoSplited.Count = 3 Then
       intMinutes = CInt(strTempoSplited(0))
-      intSeconds = CInt(strTempoSplited(1)) + _punicao
+      intSeconds = CInt(strTempoSplited(1))
       intMiliSeconds = CInt(strTempoSplited(2)) * 10
     End If
 
-    novoTempo = New TimeSpan(intDays, intHours, intMinutes, intSeconds, intMiliSeconds)
+    novoTempo = New TimeSpan(intDays, intHours, intMinutes, intSeconds, intMiliSeconds) + _punicao
     Return novoTempo
   End Function
 
