@@ -45,6 +45,11 @@
   Private intCorridaFuelMass As Integer = 0
   Private intCorridaDamageFactor As Integer = 0
 
+
+  'Criterio de desempate do usuário
+  Private intCriterioUsuarioCorrida As Integer = 0
+  Private intCriterioUsuarioClassificacao As Integer = 0
+
   'Objetos para o GridView
   Private strGridPilotoNome As String = String.Empty
   Private intGridNumero As Integer = 0
@@ -52,6 +57,7 @@
   Private strGridEquipeNome As String = String.Empty
   Private imgGridLogo As Image = Nothing
   Private imgGridCarro As Image = Nothing
+
 
   ''' <summary>
   ''' Posicao do Piloto no Grid
@@ -644,16 +650,46 @@
   End Property
 
   ''' <summary>
+  ''' Criterio de desempate do usuário - Corrida
+  ''' </summary>
+  ''' <value></value>
+  ''' <returns></returns>
+  ''' <remarks></remarks>
+  Public Property CriterioUsuarioCorrida As Integer
+    Get
+      Return intCriterioUsuarioCorrida
+    End Get
+    Set(value As Integer)
+      intCriterioUsuarioCorrida = value
+    End Set
+  End Property
+
+  ''' <summary>
+  ''' Criterio de desempate do usuário - Classificação
+  ''' </summary>
+  ''' <value></value>
+  ''' <returns></returns>
+  ''' <remarks></remarks>
+  Public Property CriterioUsuarioClassificacao As Integer
+    Get
+      Return intCriterioUsuarioClassificacao
+    End Get
+    Set(value As Integer)
+      intCriterioUsuarioClassificacao = value
+    End Set
+  End Property
+
+  ''' <summary>
   ''' 
   ''' </summary>
   ''' <param name="_Piloto"></param>
   ''' <param name="_Etapa"></param>
   ''' <param name="_Equipe"></param>
-  ''' <param name="_Tomada"></param>
+  ''' <param name="_TomadaClassificacao"></param>
+  ''' <param name="_TomadaCorrida"></param>
   ''' <param name="_MelhorVoltaClassifcacao"></param>
   ''' <param name="_MelhorVoltaCorrida"></param>
   ''' <param name="_NomeArquivo"></param>
-  ''' <remarks></remarks>
   Public Sub New(ByRef _Piloto As Piloto,
                  ByRef _Etapa As Etapa,
                  ByRef _Equipe As Equipe,

@@ -29,6 +29,7 @@ Public Class MainForm
   Public dicPilotos As Dictionary(Of String, Piloto)
   Public dicResultadosPilotos As Dictionary(Of String, Piloto)
   Public dicPontos As Dictionary(Of String, Integer)
+  Public dicPontosAproximacaoClassificacao As Dictionary(Of TimeSpan, Integer)
 
   ''' <summary>
   ''' Função para permitir movimentar o form quando clica e arrasta
@@ -109,7 +110,7 @@ Public Class MainForm
       Etapa.Carregar(dirCampeonato, listEtapas, dicPaises, dicEtapas, listPilotos)
 
       'Carrega o resultado das Etapas
-      Etapa.CompilarResultadosEtapas(dirCampeonato, listEtapas, dicResultadosPilotos, dicPontos)
+      Etapa.CompilarResultadosEtapas(dirCampeonato, listEtapas, dicResultadosPilotos, dicPontos, dicPontosAproximacaoClassificacao)
 
       'Calcula a pontuacao de construtores e pilotos
       ComputarPontuacaoCampeonato()
@@ -1408,12 +1409,29 @@ Public Class MainForm
     dicPontos = New Dictionary(Of String, Integer)
     dicPontos.Clear()
 
-    For Each tmpEquipeTxtPath As FileInfo In _dirCampeonato.GetFiles("Pontuacao.txt")
+    For Each tmpEquipeTxtPath As FileInfo In _dirCampeonato.GetFiles("PontuacaoFixa.txt")
       Dim newReader As New StreamReader(tmpEquipeTxtPath.FullName, System.Text.Encoding.Default)
       While Not newReader.EndOfStream
         Dim curLine() As String = Split(newReader.ReadLine(), "=")
         If curLine.Length = 2 Then
           dicPontos.Add(curLine(0), CInt(curLine(1)))
+        End If
+        curLine = Nothing
+        newReader.Peek()
+      End While
+      newReader.Close()
+      newReader = Nothing
+    Next
+
+    dicPontosAproximacaoClassificacao = New Dictionary(Of TimeSpan, Integer)
+    dicPontosAproximacaoClassificacao.Clear()
+
+    For Each tmpEquipeTxtPath As FileInfo In _dirCampeonato.GetFiles("PontuacaoVariavel.txt")
+      Dim newReader As New StreamReader(tmpEquipeTxtPath.FullName, System.Text.Encoding.Default)
+      While Not newReader.EndOfStream
+        Dim curLine() As String = Split(newReader.ReadLine(), "=")
+        If curLine.Length = 2 Then
+          dicPontosAproximacaoClassificacao.Add(Etapa.FormataTempo(curLine(0), New TimeSpan()), CInt(curLine(1)))
         End If
         curLine = Nothing
         newReader.Peek()
@@ -1469,6 +1487,10 @@ Public Class MainForm
     Next
   End Sub
 
+  Private Sub dtGridView_SelectionChanged(sender As Object, e As EventArgs) Handles dtGridView.SelectionChanged
+    dtGridView.ClearSelection()
+  End Sub
+
   Private Sub dtGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dtGridView.CellFormatting
     Select Case dtGridView.Columns(e.ColumnIndex).Name
       Case "colTomada", "colMelhorVoltaCorrida", "colMelhorVoltaClassificacao"
@@ -1513,5 +1535,4 @@ Public Class MainForm
         e.Value = e.Value.ToString & " %"
     End Select
   End Sub
-
 End Class
