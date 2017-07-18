@@ -350,13 +350,10 @@
   ''' <value></value>
   ''' <returns></returns>
   ''' <remarks></remarks>
-  Public Property PontosTotais As Integer
+  Public ReadOnly Property PontosTotais As Integer
     Get
-      Return intPontosTotais
+      Return (PontosAproximacao + PontosDeadLine1 + PontosGrid + PontosPosicao)
     End Get
-    Set(value As Integer)
-      intPontosTotais = value
-    End Set
   End Property
 
   ''' <summary>

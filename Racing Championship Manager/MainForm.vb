@@ -205,6 +205,7 @@ Public Class MainForm
       dtGridView.DataSource = listEquipes
       FormatarDataGridViewParaEquipes()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -226,6 +227,7 @@ Public Class MainForm
       dtGridView.DataSource = listEtapas
       FormatarDataGridViewParaEtapas()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -258,6 +260,7 @@ Public Class MainForm
       FormatarDataGridViewParaEtapaGrid()
       dtGridView.Refresh()
       curEtapa = Nothing
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -289,10 +292,75 @@ Public Class MainForm
       dtGridView.DataSource = curEtapa.Resultados
       FormatarDataGridViewParaEtapaResultados()
       dtGridView.Refresh()
+      MostrarPodium(False, curEtapa)
       curEtapa = Nothing
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
+  End Sub
+
+  ''' <summary>
+  ''' 
+  ''' </summary>
+  ''' <param name="_Ocultar"></param>
+  ''' <param name="_curEtapa"></param>
+  Public Sub MostrarPodium(ByVal _Ocultar As Boolean, ByRef _curEtapa As Etapa)
+    imgPos1Trophy.Visible = False
+    imgPos1Driver.Visible = False
+    lblPos1DriverName.Visible = False
+    lblPos1Position.Visible = False
+
+    imgPos2Trophy.Visible = False
+    imgPos2Driver.Visible = False
+    lblPos2DriverName.Visible = False
+    lblPos2Position.Visible = False
+
+    imgPos3Trophy.Visible = False
+    imgPos3Driver.Visible = False
+    lblPos3DriverName.Visible = False
+    lblPos3Position.Visible = False
+
+    If _Ocultar Then
+      Exit Sub
+    End If
+
+    For Each tmpResultado As ResultadoEtapa In _curEtapa.Resultados
+      Select Case tmpResultado.PosicaoEtapa
+        Case 1
+          imgPos1Driver.Image = tmpResultado.Piloto.Corpo
+          Dim newGraphic As Graphics = Graphics.FromImage(imgPos1Driver.Image)
+          newGraphic.DrawImage(tmpResultado.Piloto.Bone, New Point(0, 0))
+          newGraphic.DrawImage(tmpResultado.Piloto.Cabeca, New Point(0, 0))
+          lblPos1DriverName.Text = tmpResultado.Piloto.Nome
+
+          imgPos1Trophy.Visible = True
+          imgPos1Driver.Visible = True
+          lblPos1DriverName.Visible = True
+          lblPos1Position.Visible = True
+        Case 2
+          imgPos2Driver.Image = tmpResultado.Piloto.Corpo
+          Dim newGraphic As Graphics = Graphics.FromImage(imgPos2Driver.Image)
+          newGraphic.DrawImage(tmpResultado.Piloto.Bone, New Point(0, 0))
+          newGraphic.DrawImage(tmpResultado.Piloto.Cabeca, New Point(0, 0))
+          lblPos2DriverName.Text = tmpResultado.Piloto.Nome
+
+          imgPos2Trophy.Visible = True
+          imgPos2Driver.Visible = True
+          lblPos2DriverName.Visible = True
+          lblPos2Position.Visible = True
+        Case 3
+          imgPos3Driver.Image = tmpResultado.Piloto.Corpo
+          Dim newGraphic As Graphics = Graphics.FromImage(imgPos3Driver.Image)
+          newGraphic.DrawImage(tmpResultado.Piloto.Bone, New Point(0, 0))
+          newGraphic.DrawImage(tmpResultado.Piloto.Cabeca, New Point(0, 0))
+          lblPos3DriverName.Text = tmpResultado.Piloto.Nome
+
+          imgPos3Trophy.Visible = True
+          imgPos3Driver.Visible = True
+          lblPos3DriverName.Visible = True
+          lblPos3Position.Visible = True
+      End Select
+    Next
   End Sub
 
   ''' <summary>
@@ -311,6 +379,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -332,6 +401,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -353,6 +423,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -374,6 +445,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -395,6 +467,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -416,6 +489,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -437,6 +511,7 @@ Public Class MainForm
       dtGridView.DataSource = listMundialPilotos
       FormatarDataGridViewParaMundialPilotos()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -458,6 +533,7 @@ Public Class MainForm
       dtGridView.DataSource = listMundialConstrutores
       FormatarDataGridViewParaMundialConstrutores()
       dtGridView.Refresh()
+      MostrarPodium(True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try

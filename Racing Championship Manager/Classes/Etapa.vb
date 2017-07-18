@@ -700,9 +700,6 @@ Public Class Etapa
         Else
           tmpResultadoEtapa.PontosPosicao = 0
         End If
-
-        'Calcula os pontos totais da etapa
-        tmpResultadoEtapa.PontosTotais = tmpResultadoEtapa.PontosAproximacao + tmpResultadoEtapa.PontosDeadLine1 + tmpResultadoEtapa.PontosGrid + tmpResultadoEtapa.PontosPosicao
       Next
     Next
   End Sub
