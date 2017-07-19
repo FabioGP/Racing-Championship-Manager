@@ -45,7 +45,6 @@
   Private intCorridaFuelMass As Integer = 0
   Private intCorridaDamageFactor As Integer = 0
 
-
   'Criterio de desempate do usuário
   Private intCriterioUsuarioCorrida As Integer = 0
   Private intCriterioUsuarioClassificacao As Integer = 0
@@ -57,7 +56,7 @@
   Private strGridEquipeNome As String = String.Empty
   Private imgGridLogo As Image = Nothing
   Private imgGridCarro As Image = Nothing
-
+  Private imgGridSkinPiloto As Image = Nothing
 
   ''' <summary>
   ''' Posicao do Piloto no Grid
@@ -677,6 +676,19 @@
   End Property
 
   ''' <summary>
+  ''' Skin do Piloto
+  ''' </summary>
+  ''' <returns></returns>
+  Public Property GridSkinPiloto As Image
+    Get
+      Return imgGridSkinPiloto
+    End Get
+    Set(value As Image)
+      imgGridSkinPiloto = value
+    End Set
+  End Property
+
+  ''' <summary>
   ''' 
   ''' </summary>
   ''' <param name="_Piloto"></param>
@@ -709,6 +721,7 @@
     GridEquipeCarro = _Equipe.Carro
     GridEquipeLogo = _Equipe.Logo
     GridEquipeNome = _Equipe.Nome
+    GridSkinPiloto = _Piloto.Skin
   End Sub
 
   ''' <summary>

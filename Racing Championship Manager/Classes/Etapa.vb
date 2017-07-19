@@ -13,6 +13,7 @@ Public Class Etapa
   Private intMassa As Integer
   Private intDanos As Integer
   Private intDesgaste As Integer
+  Private boolConcluida As Integer
   Private listResultados As List(Of ResultadoEtapa)
 
   ''' <summary>
@@ -166,6 +167,19 @@ Public Class Etapa
   End Property
 
   ''' <summary>
+  ''' Define se a etapa foi concluída ou não
+  ''' </summary>
+  ''' <returns></returns>
+  Public Property Concluida As Boolean
+    Get
+      Return boolConcluida
+    End Get
+    Set(value As Boolean)
+      boolConcluida = value
+    End Set
+  End Property
+
+  ''' <summary>
   ''' 
   ''' </summary>
   ''' <value></value>
@@ -203,7 +217,8 @@ Public Class Etapa
                  Optional ByVal _Consumo As Integer = -1,
                  Optional ByVal _Massa As Integer = -1,
                  Optional ByVal _Danos As Integer = -1,
-                 Optional ByVal _Desgaste As Integer = -1)
+                 Optional ByVal _Desgaste As Integer = -1,
+                 Optional ByVal _Concluida As Boolean = False)
     NomeCircuito = _NomeCircuito
     Pais = _Pais
     Etapa = _Etapa
@@ -214,6 +229,7 @@ Public Class Etapa
     Massa = _Massa
     Danos = _Danos
     Desgaste = _Desgaste
+    Concluida = _Concluida
     Resultados = New List(Of ResultadoEtapa)
   End Sub
 
@@ -260,7 +276,8 @@ Public Class Etapa
                                 CInt(dicOfParameters("Consumo")),
                                 CInt(dicOfParameters("Massa")),
                                 CInt(dicOfParameters("Danos")),
-                                CInt(dicOfParameters("Desgaste")))
+                                CInt(dicOfParameters("Desgaste")),
+                                CBool(dicOfParameters("Concluida")))
 
         For Each tmpPiloto As Piloto In _ListPilotos
           newEtapa.Resultados.Add(New ResultadoEtapa(tmpPiloto, newEtapa, tmpPiloto.Equipe))
@@ -646,6 +663,7 @@ Public Class Etapa
         'Soma uma pole caso o resultado tenha sido a pole
         If tmpResultadoEtapa.PosicaoGrid = 1 Then
           tmpResultadoEtapa.Piloto.Poles += 1
+          tmpResultadoEtapa.Equipe.Poles += 1
         Else
           tmpResultadoEtapa.PontosAproximacao = 0
           For Each tmpDiferenca As KeyValuePair(Of TimeSpan, Integer) In _DicPontosAproximacaoClassificacao
@@ -693,6 +711,7 @@ Public Class Etapa
         'Calcula os pontos da etapa
         If tmpResultadoEtapa.PosicaoEtapa = 1 Then
           tmpResultadoEtapa.Piloto.Vitorias += 1
+          tmpResultadoEtapa.Equipe.Vitorias += 1
         End If
 
         If _DicPontos.ContainsKey("P" & tmpResultadoEtapa.PosicaoEtapa) Then

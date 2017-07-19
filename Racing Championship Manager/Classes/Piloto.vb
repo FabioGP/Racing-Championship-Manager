@@ -9,11 +9,10 @@ Public Class Piloto
   Private strEquipe As String
   Private intNumero As Integer
   Private intPiloto As Integer
-  Private strMelhorResultadoEtapa As String
-  Private strMelhorResultadoCampeonato As String
   Private intTitulos As Integer
   Private intPoles As Integer
   Private intVitorias As Integer
+  Private intCriterio As Integer
   Private objEquipe As Equipe
   Private imgCarro As Image
   Private imgLogo As Image
@@ -21,6 +20,7 @@ Public Class Piloto
   Private imgCorpo As Image
   Private imgCabeca As Image
   Private imgBone As Image
+  Private imgSkin As Image
 
   ''' <summary> 
   ''' Nome do Piloto
@@ -112,36 +112,6 @@ Public Class Piloto
     End Set
   End Property
 
-  ''' <summary> 
-  ''' Melhor Resultado do Piloto em Etapas
-  ''' </summary>
-  ''' <value></value>
-  ''' <returns></returns>
-  ''' <remarks></remarks>
-  Public Property MelhorEtapa() As String
-    Get
-      Return strMelhorResultadoEtapa
-    End Get
-    Set(value As String)
-      strMelhorResultadoEtapa = value
-    End Set
-  End Property
-
-  ''' <summary> 
-  ''' Melhor Resultado do Piloto em Campeonatos
-  ''' </summary>
-  ''' <value></value>
-  ''' <returns></returns>
-  ''' <remarks></remarks>
-  Public Property MelhorCampeonato() As String
-    Get
-      Return strMelhorResultadoCampeonato
-    End Get
-    Set(value As String)
-      strMelhorResultadoCampeonato = value
-    End Set
-  End Property
-
   ''' <summary>
   ''' Títulos do Piloto
   ''' </summary>
@@ -158,7 +128,7 @@ Public Class Piloto
   End Property
 
   ''' <summary>
-  ''' Vitporias do Piloto
+  ''' Vitorias do Piloto
   ''' </summary>
   ''' <value></value>
   ''' <returns></returns>
@@ -184,6 +154,21 @@ Public Class Piloto
     End Get
     Set(value As Integer)
       intPoles = value
+    End Set
+  End Property
+
+  ''' <summary>
+  ''' Criterio de Desempate
+  ''' </summary>
+  ''' <value></value>
+  ''' <returns></returns>
+  ''' <remarks></remarks>
+  Public Property Criterio() As Integer
+    Get
+      Return intCriterio
+    End Get
+    Set(value As Integer)
+      intCriterio = value
     End Set
   End Property
 
@@ -293,6 +278,18 @@ Public Class Piloto
   End Property
 
   ''' <summary>
+  ''' Skin do Piloto
+  ''' </summary>
+  ''' <value></value>
+  ''' <returns></returns>
+  ''' <remarks></remarks>
+  Public ReadOnly Property Skin() As Image
+    Get
+      Return LoadSkin(Me)
+    End Get
+  End Property
+
+  ''' <summary>
   ''' 
   ''' </summary>
   ''' <param name="_Nome"></param>
@@ -300,24 +297,26 @@ Public Class Piloto
   ''' <param name="_Idade"></param>
   ''' <param name="_NomeEquipe"></param>
   ''' <param name="_Piloto"></param>
-  ''' <param name="_MelhorEtapa"></param>
-  ''' <param name="_MelhorCampeonato"></param>
   ''' <param name="_Titulos"></param>
   ''' <param name="_Vitorias"></param>
   ''' <param name="_Poles"></param>
+  ''' <param name="_Criterio"></param>
   ''' <param name="_Equipe"></param>
   ''' <param name="_Bandeira"></param>
-  ''' <remarks></remarks>
+  ''' <param name="_Carro"></param>
+  ''' <param name="_Logo"></param>
+  ''' <param name="_Corpo"></param>
+  ''' <param name="_Cabeca"></param>
+  ''' <param name="_Bone"></param>
   Public Sub New(ByVal _Nome As String,
                  ByVal _Pais As String,
                  ByVal _Idade As String,
                  ByVal _NomeEquipe As String,
                  ByVal _Piloto As Integer,
-                 ByVal _MelhorEtapa As String,
-                 ByVal _MelhorCampeonato As String,
                  ByVal _Titulos As Integer,
                  ByVal _Vitorias As Integer,
                  ByVal _Poles As Integer,
+                 ByVal _Criterio As Integer,
                  Optional ByRef _Equipe As Equipe = Nothing,
                  Optional ByRef _Bandeira As Image = Nothing,
                  Optional ByRef _Carro As Image = Nothing,
@@ -330,11 +329,10 @@ Public Class Piloto
     Idade = _Idade
     NomeEquipe = _NomeEquipe
     Piloto = _Piloto
-    MelhorEtapa = _MelhorEtapa
-    MelhorCampeonato = _MelhorCampeonato
     Titulos = _Titulos
     Vitorias = _Vitorias
     Poles = _Poles
+    Criterio = _Criterio
     Equipe = _Equipe
     Bandeira = _Bandeira
     Carro = _Carro
@@ -388,11 +386,10 @@ Public Class Piloto
                                   dicOfParameters("Idade"),
                                   dicOfParameters("Equipe"),
                                   CInt(dicOfParameters("Piloto")),
-                                  dicOfParameters("MelhorResultadoEtapa"),
-                                  dicOfParameters("MelhorResultadoCampeonato"),
-                                  CInt(dicOfParameters("Títulos")),
-                                  CInt(dicOfParameters("Vitórias")),
-                                  CInt(dicOfParameters("Poles")),
+                                  0,
+                                  0,
+                                  0,
+                                  CInt(dicOfParameters("Criterio")),
                                   _DicEquipes(dicOfParameters("Equipe")),
                                   _DicPaises(dicOfParameters("País")),
                                   DirectCast(_DicEquipes(dicOfParameters("Equipe")), Equipe).Carro,
@@ -408,6 +405,20 @@ Public Class Piloto
       MessageBox.Show(ex.Message)
     End Try
   End Sub
+
+  Public Shared Function LoadSkin(ByRef _piloto As Piloto) As Image
+    Dim newImgSkin As Image = Nothing
+    If _piloto.Cabeca IsNot Nothing AndAlso
+       _piloto.Corpo IsNot Nothing AndAlso
+       _piloto.Bone IsNot Nothing Then
+      newImgSkin = _piloto.Corpo
+      Dim newGraphic As Graphics = Graphics.FromImage(newImgSkin)
+      newGraphic.DrawImage(_piloto.Bone, New Point(0, 0))
+      newGraphic.DrawImage(_piloto.Cabeca, New Point(0, 0))
+      newGraphic = Nothing
+    End If
+    Return newImgSkin
+  End Function
 
   ''' <summary>
   ''' Compare function to sort by Equipe Name

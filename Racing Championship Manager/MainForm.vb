@@ -31,6 +31,11 @@ Public Class MainForm
   Public dicPontos As Dictionary(Of String, Integer)
   Public dicPontosAproximacaoClassificacao As Dictionary(Of TimeSpan, Integer)
 
+  'Objetos Selecionados
+  Private _curEtapa As Etapa = Nothing
+  Private _curPiloto As Piloto = Nothing
+  Private _curEquipe As Equipe = Nothing
+
   ''' <summary>
   ''' Função para permitir movimentar o form quando clica e arrasta
   ''' </summary>
@@ -205,7 +210,7 @@ Public Class MainForm
       dtGridView.DataSource = listEquipes
       FormatarDataGridViewParaEquipes()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, Nothing, False)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -227,7 +232,7 @@ Public Class MainForm
       dtGridView.DataSource = listEtapas
       FormatarDataGridViewParaEtapas()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, Nothing, False)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -248,8 +253,10 @@ Public Class MainForm
 
       Dim curEtapa As Etapa = dicMenuEtapas(mnuItem.Name)
       If curEtapa Is Nothing Then
+        _curEtapa = Nothing
         Exit Sub
       End If
+      _curEtapa = curEtapa
 
       imgTitle.Image = curEtapa.Pais
       lblTitle.Text = curEtapa.NomeCircuito
@@ -260,7 +267,7 @@ Public Class MainForm
       FormatarDataGridViewParaEtapaGrid()
       dtGridView.Refresh()
       curEtapa = Nothing
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, Nothing, False)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -281,8 +288,10 @@ Public Class MainForm
 
       Dim curEtapa As Etapa = dicMenuEtapas(mnuItem.Name)
       If curEtapa Is Nothing Then
+        _curEtapa = Nothing
         Exit Sub
       End If
+      _curEtapa = curEtapa
 
       imgTitle.Image = curEtapa.Pais
       lblTitle.Text = curEtapa.NomeCircuito
@@ -292,75 +301,11 @@ Public Class MainForm
       dtGridView.DataSource = curEtapa.Resultados
       FormatarDataGridViewParaEtapaResultados()
       dtGridView.Refresh()
-      MostrarPodium(False, curEtapa)
+      MostrarPodium(False, False, False, curEtapa)
       curEtapa = Nothing
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
-  End Sub
-
-  ''' <summary>
-  ''' 
-  ''' </summary>
-  ''' <param name="_Ocultar"></param>
-  ''' <param name="_curEtapa"></param>
-  Public Sub MostrarPodium(ByVal _Ocultar As Boolean, ByRef _curEtapa As Etapa)
-    imgPos1Trophy.Visible = False
-    imgPos1Driver.Visible = False
-    lblPos1DriverName.Visible = False
-    lblPos1Position.Visible = False
-
-    imgPos2Trophy.Visible = False
-    imgPos2Driver.Visible = False
-    lblPos2DriverName.Visible = False
-    lblPos2Position.Visible = False
-
-    imgPos3Trophy.Visible = False
-    imgPos3Driver.Visible = False
-    lblPos3DriverName.Visible = False
-    lblPos3Position.Visible = False
-
-    If _Ocultar Then
-      Exit Sub
-    End If
-
-    For Each tmpResultado As ResultadoEtapa In _curEtapa.Resultados
-      Select Case tmpResultado.PosicaoEtapa
-        Case 1
-          imgPos1Driver.Image = tmpResultado.Piloto.Corpo
-          Dim newGraphic As Graphics = Graphics.FromImage(imgPos1Driver.Image)
-          newGraphic.DrawImage(tmpResultado.Piloto.Bone, New Point(0, 0))
-          newGraphic.DrawImage(tmpResultado.Piloto.Cabeca, New Point(0, 0))
-          lblPos1DriverName.Text = tmpResultado.Piloto.Nome
-
-          imgPos1Trophy.Visible = True
-          imgPos1Driver.Visible = True
-          lblPos1DriverName.Visible = True
-          lblPos1Position.Visible = True
-        Case 2
-          imgPos2Driver.Image = tmpResultado.Piloto.Corpo
-          Dim newGraphic As Graphics = Graphics.FromImage(imgPos2Driver.Image)
-          newGraphic.DrawImage(tmpResultado.Piloto.Bone, New Point(0, 0))
-          newGraphic.DrawImage(tmpResultado.Piloto.Cabeca, New Point(0, 0))
-          lblPos2DriverName.Text = tmpResultado.Piloto.Nome
-
-          imgPos2Trophy.Visible = True
-          imgPos2Driver.Visible = True
-          lblPos2DriverName.Visible = True
-          lblPos2Position.Visible = True
-        Case 3
-          imgPos3Driver.Image = tmpResultado.Piloto.Corpo
-          Dim newGraphic As Graphics = Graphics.FromImage(imgPos3Driver.Image)
-          newGraphic.DrawImage(tmpResultado.Piloto.Bone, New Point(0, 0))
-          newGraphic.DrawImage(tmpResultado.Piloto.Cabeca, New Point(0, 0))
-          lblPos3DriverName.Text = tmpResultado.Piloto.Nome
-
-          imgPos3Trophy.Visible = True
-          imgPos3Driver.Visible = True
-          lblPos3DriverName.Visible = True
-          lblPos3Position.Visible = True
-      End Select
-    Next
   End Sub
 
   ''' <summary>
@@ -379,7 +324,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, False, False, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -401,7 +346,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, False, False, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -423,7 +368,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, False, False, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -445,7 +390,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, False, False, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -467,7 +412,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, False, False, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -489,7 +434,7 @@ Public Class MainForm
       dtGridView.DataSource = listPilotos
       FormatarDataGridViewParaPilotos()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(True, False, False, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -511,7 +456,7 @@ Public Class MainForm
       dtGridView.DataSource = listMundialPilotos
       FormatarDataGridViewParaMundialPilotos()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(False, True, False, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -533,7 +478,7 @@ Public Class MainForm
       dtGridView.DataSource = listMundialConstrutores
       FormatarDataGridViewParaMundialConstrutores()
       dtGridView.Refresh()
-      MostrarPodium(True, Nothing)
+      MostrarPodium(False, False, True, Nothing)
     Catch ex As Exception
       MessageBox.Show(ex.Message)
     End Try
@@ -612,7 +557,19 @@ Public Class MainForm
       Dim newTextColumn As DataGridViewTextBoxColumn = Nothing
       Dim newImgColumn As DataGridViewImageColumn = Nothing
 
-      '1 - Nome
+      '1 - Skin
+      newImgColumn = New DataGridViewImageColumn()
+      newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
+      newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newImgColumn.Width = 50
+      newImgColumn.Name = "colSkin"
+      newImgColumn.DataPropertyName = "Skin"
+      newImgColumn.HeaderText = ""
+      newImgColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newImgColumn.ReadOnly = True
+      dtGridView.Columns.Add(newImgColumn)
+
+      '2 - Nome
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colNome"
@@ -622,7 +579,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '2 - Idade
+      '3 - Idade
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colIdade"
@@ -632,7 +589,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '3 - Bandeira
+      '4 - Bandeira
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -643,7 +600,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '4 - Nome da Equipe
+      '5 - Nome da Equipe
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colEquipeNome"
@@ -653,7 +610,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '5 - Logo da Equipe
+      '6 - Logo da Equipe
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -664,7 +621,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '6 - Carro da Equipe
+      '7 - Carro da Equipe
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -675,7 +632,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '7 - Piloto
+      '8 - Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colPiloto"
@@ -685,7 +642,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '8 - Numero do Carro
+      '9 - Numero do Carro
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colNumero"
@@ -695,7 +652,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '8 - Poles
+      '10 - Poles
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colPoles"
@@ -705,7 +662,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '9 - Vitorias
+      '11 - Vitorias
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colVitorias"
@@ -715,7 +672,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '10 - Títulos
+      '12 - Títulos
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colTitulos"
@@ -770,7 +727,7 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colNomeCircuito"
       newTextColumn.DataPropertyName = "NomeCircuito"
-      newTextColumn.HeaderText = "Nome do Circuito"
+      newTextColumn.HeaderText = "Nome do" & vbNewLine & "Circuito"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -780,7 +737,7 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colTomada"
       newTextColumn.DataPropertyName = "Tomada"
-      newTextColumn.HeaderText = "Tomada Recorde"
+      newTextColumn.HeaderText = "Tomada" & vbNewLine & "Recorde"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -790,7 +747,7 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colVoltaRecorde"
       newTextColumn.DataPropertyName = "VoltaRecorde"
-      newTextColumn.HeaderText = "Volta Recorde"
+      newTextColumn.HeaderText = "Volta" & vbNewLine & "Recorde"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -800,7 +757,7 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colVoltas"
       newTextColumn.DataPropertyName = "Voltas"
-      newTextColumn.HeaderText = "Quantidade de Voltas"
+      newTextColumn.HeaderText = "Voltas"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -810,7 +767,7 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colConsumo"
       newTextColumn.DataPropertyName = "Consumo"
-      newTextColumn.HeaderText = "Consumo de Combustível"
+      newTextColumn.HeaderText = "Consumo de" & vbNewLine & "Combustível"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -820,7 +777,7 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colMassa"
       newTextColumn.DataPropertyName = "Massa"
-      newTextColumn.HeaderText = "Massa do Combustível"
+      newTextColumn.HeaderText = "Massa do" & vbNewLine & "Combustível"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -830,7 +787,7 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colDanos"
       newTextColumn.DataPropertyName = "Danos"
-      newTextColumn.HeaderText = "Coeficiente de Danos"
+      newTextColumn.HeaderText = "Coeficiente de" & vbNewLine & "Danos"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -840,7 +797,17 @@ Public Class MainForm
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colDesgaste"
       newTextColumn.DataPropertyName = "Desgaste"
-      newTextColumn.HeaderText = "Desgaste de Pneus"
+      newTextColumn.HeaderText = "Desgaste de" & vbNewLine & "Pneus"
+      newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newTextColumn.ReadOnly = True
+      dtGridView.Columns.Add(newTextColumn)
+
+      '11 - Etapa Concluída
+      newTextColumn = New DataGridViewTextBoxColumn()
+      newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      newTextColumn.Name = "colConcluida"
+      newTextColumn.DataPropertyName = "Concluida"
+      newTextColumn.HeaderText = "Etapa" & vbNewLine & "Concluída?"
       newTextColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
@@ -876,7 +843,19 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '2 - Nome do Piloto
+      '2 - Skin
+      newImgColumn = New DataGridViewImageColumn()
+      newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
+      newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newImgColumn.Width = 50
+      newImgColumn.Name = "colSkin"
+      newImgColumn.DataPropertyName = "GridSkinPiloto"
+      newImgColumn.HeaderText = ""
+      newImgColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newImgColumn.ReadOnly = True
+      dtGridView.Columns.Add(newImgColumn)
+
+      '3 - Nome do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colPilotoNome"
@@ -886,7 +865,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '3 - Número do Piloto
+      '4 - Número do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 40
@@ -897,7 +876,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '4 - País
+      '5 - País
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
@@ -909,7 +888,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '5 - Nome da Equipe
+      '6 - Nome da Equipe
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colEquipeNome"
@@ -919,7 +898,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '6 - Logo
+      '7 - Logo
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
@@ -931,7 +910,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '7 - Carro
+      '8 - Carro
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -942,7 +921,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '8 - Tomada
+      '9 - Tomada
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -954,7 +933,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '9 - Punição na Corrida
+      '10 - Punição na Corrida
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -966,7 +945,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '10 - Gap para Líder
+      '11 - Gap para Líder
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -978,7 +957,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '11 - Gap para Frente
+      '12 - Gap para Frente
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -990,7 +969,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '12 - Melhor Volta da Corrida
+      '13 - Melhor Volta da Corrida
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -1002,7 +981,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '13 - Pneus
+      '14 - Pneus
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 50
@@ -1013,7 +992,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '14 - Evolucao
+      '15 - Evolucao
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 50
@@ -1024,7 +1003,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '15 - Fator Grid
+      '16 - Fator Grid
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 80
@@ -1035,7 +1014,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '16 - Pontos da Etapa
+      '17 - Pontos da Etapa
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 80
@@ -1046,7 +1025,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '17 - Pontos Totais
+      '18 - Pontos Totais
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 80
@@ -1089,7 +1068,19 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '2 - Nome do Piloto
+      '2 - Skin
+      newImgColumn = New DataGridViewImageColumn()
+      newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
+      newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newImgColumn.Width = 50
+      newImgColumn.Name = "colSkin"
+      newImgColumn.DataPropertyName = "GridSkinPiloto"
+      newImgColumn.HeaderText = ""
+      newImgColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newImgColumn.ReadOnly = True
+      dtGridView.Columns.Add(newImgColumn)
+
+      '3 - Nome do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colPilotoNome"
@@ -1099,7 +1090,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '3 - Número do Piloto
+      '4 - Número do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 40
@@ -1110,7 +1101,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '4 - País
+      '5 - País
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
@@ -1122,7 +1113,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '5 - Nome da Equipe
+      '6 - Nome da Equipe
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Name = "colEquipeNome"
@@ -1132,7 +1123,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '6 - Logo
+      '7 - Logo
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
@@ -1144,7 +1135,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '7 - Carro
+      '8 - Carro
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -1155,7 +1146,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '8 - Melhor Volta da Classificação
+      '9 - Melhor Volta da Classificação
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -1167,7 +1158,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '9 - Tomada da Classificação
+      '10 - Tomada da Classificação
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -1179,7 +1170,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '10 - Punição na Classificação
+      '11 - Punição na Classificação
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -1191,7 +1182,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '11 - Gap para Líder
+      '12 - Gap para Líder
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 100
@@ -1203,7 +1194,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '12 - Pneus
+      '13 - Pneus
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 50
@@ -1214,7 +1205,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '13 - Pontos Deadline 1
+      '14 - Pontos Deadline 1
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 80
@@ -1225,7 +1216,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '14 - Pontos GRID
+      '15 - Pontos GRID
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 80
@@ -1236,7 +1227,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '15 - Pontos de Aproximação
+      '16 - Pontos de Aproximação
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 80
@@ -1278,7 +1269,19 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '2 - Nome do Piloto
+      '2 - Skin
+      newImgColumn = New DataGridViewImageColumn()
+      newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
+      newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+      newImgColumn.Width = 50
+      newImgColumn.Name = "colSkin"
+      newImgColumn.DataPropertyName = "GridSkinPiloto"
+      newImgColumn.HeaderText = ""
+      newImgColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      newImgColumn.ReadOnly = True
+      dtGridView.Columns.Add(newImgColumn)
+
+      '3 - Nome do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Width = 200
@@ -1289,7 +1292,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '3 - Número do Piloto
+      '4 - Número do Piloto
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
       newTextColumn.Name = "colPilotoNumero"
@@ -1299,7 +1302,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '4 - País
+      '5 - País
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
@@ -1311,7 +1314,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '5 - Nome da Equipe
+      '6 - Nome da Equipe
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       newTextColumn.Width = 200
@@ -1322,7 +1325,7 @@ Public Class MainForm
       newTextColumn.ReadOnly = True
       dtGridView.Columns.Add(newTextColumn)
 
-      '6 - Logo
+      '7 - Logo
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
@@ -1334,7 +1337,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '7 - Carro
+      '8 - Carro
       newImgColumn = New DataGridViewImageColumn()
       newImgColumn.ImageLayout = DataGridViewImageCellLayout.Zoom
       newImgColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -1345,7 +1348,7 @@ Public Class MainForm
       newImgColumn.ReadOnly = True
       dtGridView.Columns.Add(newImgColumn)
 
-      '8 - Pontos
+      '9 - Pontos
       newTextColumn = New DataGridViewTextBoxColumn()
       newTextColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
       newTextColumn.Width = 90
@@ -1526,6 +1529,10 @@ Public Class MainForm
     Dim dicPontosEquipes As New Dictionary(Of Equipe, Integer)
     For Each tmpEtapa As Etapa In listEtapas
       For Each tmpResultadoEtapa As ResultadoEtapa In tmpEtapa.Resultados
+        If Not tmpEtapa.Concluida Then
+          Continue For
+        End If
+
         If Not dicPontosPilotos.ContainsKey(tmpResultadoEtapa.Piloto) Then
           dicPontosPilotos.Add(tmpResultadoEtapa.Piloto, 0)
         End If
@@ -1543,9 +1550,12 @@ Public Class MainForm
     For Each tmpPiloto As Piloto In dicPontosPilotos.Keys
       listMundialPilotos.Add(New ResultadoPiloto(tmpPiloto, tmpPiloto.Equipe, dicPontosPilotos(tmpPiloto)))
     Next
-    listMundialPilotos = listMundialPilotos.OrderByDescending(Function(resultPiloto) resultPiloto.Pontos).ToList()
+    listMundialPilotos = listMundialPilotos.OrderByDescending(Function(resultPiloto) resultPiloto.Pontos).ThenBy(Function(resultPiloto) resultPiloto.Vitorias).ThenBy(Function(resultPiloto) resultPiloto.Criterio).ThenBy(Function(resultPiloto) resultPiloto.Poles).ToList()
     Dim pos As Integer = 1
     For Each tmpResultadoPiloto As ResultadoPiloto In listMundialPilotos
+      If pos = 1 Then
+        tmpResultadoPiloto.Piloto.Titulos += 1
+      End If
       tmpResultadoPiloto.Posicao = pos
       pos += 1
     Next
@@ -1555,18 +1565,156 @@ Public Class MainForm
     For Each tmpEquipe As Equipe In dicPontosEquipes.Keys
       listMundialConstrutores.Add(New ResultadoEquipe(tmpEquipe, dicPontosEquipes(tmpEquipe)))
     Next
-    listMundialConstrutores = listMundialConstrutores.OrderByDescending(Function(resultEquipe) resultEquipe.Pontos).ToList()
+    listMundialConstrutores = listMundialConstrutores.OrderByDescending(Function(resultEquipe) resultEquipe.Pontos).ThenBy(Function(resultEquipe) resultEquipe.Vitorias).ThenBy(Function(resultEquipe) resultEquipe.Criterio).ThenBy(Function(resultEquipe) resultEquipe.Poles).ToList()
     pos = 1
     For Each tmpResultadoEquipe As ResultadoEquipe In listMundialConstrutores
+      If pos = 1 Then
+        tmpResultadoEquipe.Equipe.Titulos += 1
+      End If
       tmpResultadoEquipe.Posicao = pos
       pos += 1
     Next
   End Sub
 
+  ''' <summary>
+  ''' Mostra o Podium no topo da página
+  ''' </summary>
+  ''' <param name="_Ocultar"></param>
+  ''' <param name="_byMundialPilotos"></param>
+  ''' <param name="_byMundialEquipes"></param>
+  ''' <param name="_curEtapa"></param>
+  Public Sub MostrarPodium(ByVal _Ocultar As Boolean, ByVal _byMundialPilotos As Boolean, ByVal _byMundialEquipes As Boolean, Optional ByRef _curEtapa As Etapa = Nothing)
+    imgPos1Trophy.Visible = False
+    imgPos1Driver.Visible = False
+    lblPos1DriverName.Visible = False
+    lblPos1Position.Visible = False
+
+    imgPos2Trophy.Visible = False
+    imgPos2Driver.Visible = False
+    lblPos2DriverName.Visible = False
+    lblPos2Position.Visible = False
+
+    imgPos3Trophy.Visible = False
+    imgPos3Driver.Visible = False
+    lblPos3DriverName.Visible = False
+    lblPos3Position.Visible = False
+
+    If _Ocultar Then
+      Exit Sub
+    End If
+
+    If _curEtapa IsNot Nothing Then
+      For Each tmpResultado As ResultadoEtapa In _curEtapa.Resultados
+        Select Case tmpResultado.PosicaoEtapa
+          Case 1
+            imgPos1Driver.Image = tmpResultado.Piloto.Skin
+            lblPos1DriverName.Text = tmpResultado.Piloto.Nome
+
+            imgPos1Trophy.Visible = True
+            imgPos1Driver.Visible = True
+            lblPos1DriverName.Visible = True
+            lblPos1Position.Visible = True
+          Case 2
+            imgPos2Driver.Image = tmpResultado.Piloto.Skin
+            lblPos2DriverName.Text = tmpResultado.Piloto.Nome
+
+            imgPos2Trophy.Visible = True
+            imgPos2Driver.Visible = True
+            lblPos2DriverName.Visible = True
+            lblPos2Position.Visible = True
+          Case 3
+            imgPos3Driver.Image = tmpResultado.Piloto.Skin
+            lblPos3DriverName.Text = tmpResultado.Piloto.Nome
+
+            imgPos3Trophy.Visible = True
+            imgPos3Driver.Visible = True
+            lblPos3DriverName.Visible = True
+            lblPos3Position.Visible = True
+        End Select
+      Next
+      Exit Sub
+    End If
+
+    If _curEtapa Is Nothing AndAlso _byMundialPilotos = True Then
+      For Each tmpResultadoPiloto As ResultadoPiloto In listMundialPilotos
+        Select Case tmpResultadoPiloto.Posicao
+          Case 1
+            imgPos1Driver.Image = tmpResultadoPiloto.Piloto.Skin
+            lblPos1DriverName.Text = tmpResultadoPiloto.Piloto.Nome
+
+            imgPos1Trophy.Visible = True
+            imgPos1Driver.Visible = True
+            lblPos1DriverName.Visible = True
+            lblPos1Position.Visible = True
+          Case 2
+            imgPos2Driver.Image = tmpResultadoPiloto.Piloto.Skin
+            lblPos2DriverName.Text = tmpResultadoPiloto.Piloto.Nome
+
+            imgPos2Trophy.Visible = True
+            imgPos2Driver.Visible = True
+            lblPos2DriverName.Visible = True
+            lblPos2Position.Visible = True
+          Case 3
+            imgPos3Driver.Image = tmpResultadoPiloto.Piloto.Skin
+            lblPos3DriverName.Text = tmpResultadoPiloto.Piloto.Nome
+
+            imgPos3Trophy.Visible = True
+            imgPos3Driver.Visible = True
+            lblPos3DriverName.Visible = True
+            lblPos3Position.Visible = True
+        End Select
+      Next
+      Exit Sub
+    End If
+
+    If _curEtapa Is Nothing AndAlso _byMundialEquipes = True Then
+      For Each tmpResultadoEquipe As ResultadoEquipe In listMundialConstrutores
+        Select Case tmpResultadoEquipe.Posicao
+          Case 1
+            imgPos1Driver.Image = tmpResultadoEquipe.GridEquipeLogo
+            lblPos1DriverName.Text = tmpResultadoEquipe.GridEquipeNome
+
+            imgPos1Trophy.Visible = True
+            imgPos1Driver.Visible = True
+            lblPos1DriverName.Visible = True
+            lblPos1Position.Visible = True
+          Case 2
+            imgPos2Driver.Image = tmpResultadoEquipe.GridEquipeLogo
+            lblPos2DriverName.Text = tmpResultadoEquipe.GridEquipeNome
+
+            imgPos2Trophy.Visible = True
+            imgPos2Driver.Visible = True
+            lblPos2DriverName.Visible = True
+            lblPos2Position.Visible = True
+          Case 3
+            imgPos3Driver.Image = tmpResultadoEquipe.GridEquipeLogo
+            lblPos3DriverName.Text = tmpResultadoEquipe.GridEquipeNome
+
+            imgPos3Trophy.Visible = True
+            imgPos3Driver.Visible = True
+            lblPos3DriverName.Visible = True
+            lblPos3Position.Visible = True
+        End Select
+      Next
+      Exit Sub
+    End If
+
+  End Sub
+
+  ''' <summary>
+  ''' Desabilita a seleção do grid
+  ''' </summary>
+  ''' <param name="sender"></param>
+  ''' <param name="e"></param>
   Private Sub dtGridView_SelectionChanged(sender As Object, e As EventArgs) Handles dtGridView.SelectionChanged
     dtGridView.ClearSelection()
   End Sub
 
+  ''' <summary>
+  ''' Formata as colunas dependendo do nome
+  ''' </summary>
+  ''' <param name="sender"></param>
+  ''' <param name="e"></param>
   Private Sub dtGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dtGridView.CellFormatting
     Select Case dtGridView.Columns(e.ColumnIndex).Name
       Case "colTomada", "colMelhorVoltaCorrida", "colMelhorVoltaClassificacao"
@@ -1608,7 +1756,36 @@ Public Class MainForm
         End If
 
       Case "colPneus"
+        If _curEtapa IsNot Nothing AndAlso CInt(e.Value) < _curEtapa.Desgaste Then
+          e.Value = e.Value.ToString & " %"
+          e.CellStyle.ForeColor = Color.LightBlue
+        ElseIf _curEtapa IsNot Nothing AndAlso _curEtapa.Desgaste = CInt(e.Value) Then
+          e.Value = e.Value.ToString & " %"
+          e.CellStyle.ForeColor = Color.White
+        Else
+          e.Value = e.Value.ToString & " %"
+          e.CellStyle.ForeColor = Color.LightCoral
+        End If
+
+      Case "colVoltas"
+        e.Value = e.Value.ToString & " voltas"
+
+      Case "colConsumo", "colDesgaste", "colDanos"
         e.Value = e.Value.ToString & " %"
+
+      Case "colMassa"
+        e.Value = e.Value.ToString & " Kg"
+
+      Case "colConcluida"
+        Select Case e.Value.ToString
+          Case "True"
+            e.Value = "Sim"
+          Case "False"
+            e.Value = "Não"
+          Case Else
+            e.Value = ""
+        End Select
+
     End Select
   End Sub
 End Class
