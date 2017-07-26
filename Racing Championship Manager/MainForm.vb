@@ -205,6 +205,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Equipes
       lblTitle.Text = "Tabela de Equipes"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listEquipes = listEquipes.OrderBy(Function(equipe) equipe.Nome).ToList()
       dtGridView.DataSource = listEquipes
@@ -227,6 +228,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Circuitos
       lblTitle.Text = "Calendário"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listEtapas = listEtapas.OrderBy(Function(etapa) etapa.Etapa).ToList()
       dtGridView.DataSource = listEtapas
@@ -246,6 +248,7 @@ Public Class MainForm
   ''' <remarks></remarks>
   Private Sub mnuEtapaGrid_Click(sender As Object, e As EventArgs)
     Try
+      'ChampionshipChart.Visible = False
       Dim mnuItem As ToolStripMenuItem = DirectCast(sender, ToolStripMenuItem)
       If mnuItem Is Nothing Then
         Exit Sub
@@ -281,6 +284,7 @@ Public Class MainForm
   ''' <remarks></remarks>
   Private Sub mnuEtapaResultado_Click(sender As Object, e As EventArgs)
     Try
+      'ChampionshipChart.Visible = False
       Dim mnuItem As ToolStripMenuItem = DirectCast(sender, ToolStripMenuItem)
       If mnuItem Is Nothing Then
         Exit Sub
@@ -319,6 +323,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Pilotos
       lblTitle.Text = "Tabela de Pilotos"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listPilotos = listPilotos.OrderBy(Function(piloto) piloto.Nome).ToList()
       dtGridView.DataSource = listPilotos
@@ -341,6 +346,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Pilotos
       lblTitle.Text = "Tabela de Pilotos"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listPilotos = listPilotos.OrderBy(Function(piloto) piloto.NomeEquipe).ThenBy(Function(piloto) piloto.Piloto).ToList()
       dtGridView.DataSource = listPilotos
@@ -363,6 +369,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Pilotos
       lblTitle.Text = "Tabela de Pilotos"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listPilotos = listPilotos.OrderByDescending(Function(piloto) piloto.Titulos).ToList()
       dtGridView.DataSource = listPilotos
@@ -385,6 +392,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Pilotos
       lblTitle.Text = "Tabela de Pilotos"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listPilotos = listPilotos.OrderByDescending(Function(piloto) piloto.Vitorias).ToList()
       dtGridView.DataSource = listPilotos
@@ -407,6 +415,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Pilotos
       lblTitle.Text = "Tabela de Pilotos"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listPilotos = listPilotos.OrderByDescending(Function(piloto) piloto.Poles).ToList()
       dtGridView.DataSource = listPilotos
@@ -429,6 +438,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Pilotos
       lblTitle.Text = "Tabela de Pilotos"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listPilotos = listPilotos.OrderByDescending(Function(piloto) piloto.Idade).ToList()
       dtGridView.DataSource = listPilotos
@@ -451,6 +461,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Campeonato
       lblTitle.Text = "Mundial de Pilotos"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listMundialPilotos = listMundialPilotos.OrderBy(Function(resultPiloto) resultPiloto.Posicao).ToList()
       dtGridView.DataSource = listMundialPilotos
@@ -473,6 +484,7 @@ Public Class MainForm
       imgTitle.Image = My.Resources.Campeonato
       lblTitle.Text = "Mundial de Construtores"
       lblDescription.Text = dirCampeonato.Name
+      'ChampionshipChart.Visible = False
 
       listMundialConstrutores = listMundialConstrutores.OrderBy(Function(resultEquipe) resultEquipe.Posicao).ToList()
       dtGridView.DataSource = listMundialConstrutores
@@ -1788,4 +1800,43 @@ Public Class MainForm
 
     End Select
   End Sub
+
+  '''' <summary>
+  '''' Mostra o Gráfico de Desempenho dos Pilotos
+  '''' </summary>
+  '''' <param name="sender"></param>
+  '''' <param name="e"></param>
+  'Private Sub mnuGraficoDesempenho_Click(sender As Object, e As EventArgs) Handles mnuGraficoDesempenho.Click
+  '  Try
+  '    imgTitle.Image = My.Resources.Chart
+  '    lblTitle.Text = "Gráfico de Desempenho"
+  '    lblDescription.Text = dirCampeonato.Name
+  '    dtGridView.Visible = False
+  '    ChampionshipChart.Visible = True
+  '    MostrarPodium(False, False, False, Nothing)
+
+  '    Dim newDicPilotosSeries As New Dictionary(Of Piloto, DataVisualization.Charting.Series)
+  '    newDicPilotosSeries.Clear()
+  '    ChampionshipChart.Series.Clear()
+  '    For Each tmpPiloto As Piloto In listPilotos
+  '      Dim newPilotoSerie As New DataVisualization.Charting.Series(tmpPiloto.Nome)
+  '      newPilotoSerie.ChartType = DataVisualization.Charting.SeriesChartType.Line
+  '      newPilotoSerie.Label = tmpPiloto.Nome
+  '      ChampionshipChart.Series.Add(newPilotoSerie)
+  '      newDicPilotosSeries.Add(tmpPiloto, newPilotoSerie)
+  '      newPilotoSerie = Nothing
+  '    Next
+
+  '    For Each tmpEtapa As Etapa In listEtapas
+  '      For Each tmpResultado As ResultadoEtapa In tmpEtapa.Resultados
+  '        newDicPilotosSeries(tmpResultado.Piloto).Points.Add(New DataVisualization.Charting.DataPoint(tmpResultado.PosicaoEtapa, tmpEtapa.Etapa))
+  '      Next
+  '    Next
+  '    newDicPilotosSeries = Nothing
+
+  '  Catch ex As Exception
+  '    MessageBox.Show(ex.Message)
+  '  End Try
+  'End Sub
+
 End Class

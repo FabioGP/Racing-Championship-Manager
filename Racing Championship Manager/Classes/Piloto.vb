@@ -7,7 +7,7 @@ Public Class Piloto
   Private strPais As String
   Private intIdade As String
   Private strEquipe As String
-  Private intNumero As Integer
+  Private strNumero As String
   Private intPiloto As Integer
   Private intTitulos As Integer
   Private intPoles As Integer
@@ -88,12 +88,12 @@ Public Class Piloto
   ''' <value></value>
   ''' <returns></returns>
   ''' <remarks></remarks>
-  Public Property Numero() As Integer
+  Public Property Numero() As String
     Get
-      Return intNumero
+      Return strNumero
     End Get
-    Set(value As Integer)
-      intNumero = value
+    Set(value As String)
+      strNumero = value
     End Set
   End Property
 
@@ -313,6 +313,7 @@ Public Class Piloto
                  ByVal _Idade As String,
                  ByVal _NomeEquipe As String,
                  ByVal _Piloto As Integer,
+                 ByVal _Numero As String,
                  ByVal _Titulos As Integer,
                  ByVal _Vitorias As Integer,
                  ByVal _Poles As Integer,
@@ -327,6 +328,7 @@ Public Class Piloto
     Nome = _Nome
     Pais = _Pais
     Idade = _Idade
+    Numero = _Numero
     NomeEquipe = _NomeEquipe
     Piloto = _Piloto
     Titulos = _Titulos
@@ -386,6 +388,7 @@ Public Class Piloto
                                   dicOfParameters("Idade"),
                                   dicOfParameters("Equipe"),
                                   CInt(dicOfParameters("Piloto")),
+                                  dicOfParameters("Número"),
                                   0,
                                   0,
                                   0,

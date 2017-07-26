@@ -51,7 +51,7 @@
 
   'Objetos para o GridView
   Private strGridPilotoNome As String = String.Empty
-  Private intGridNumero As Integer = 0
+  Private strGridNumero As String = ""
   Private imgGridBandeira As Image = Nothing
   Private strGridEquipeNome As String = String.Empty
   Private imgGridLogo As Image = Nothing
@@ -406,12 +406,12 @@
   ''' <value></value>
   ''' <returns></returns>
   ''' <remarks></remarks>
-  Public Property GridPilotoNumero As Integer
+  Public Property GridPilotoNumero As String
     Get
-      Return intGridNumero
+      Return strGridNumero
     End Get
-    Set(value As Integer)
-      intGridNumero = value
+    Set(value As String)
+      strGridNumero = value
     End Set
   End Property
 
